@@ -1,0 +1,40 @@
+<nav class="bg-gray-900">
+  <div class="container mx-auto">
+    <div class="flex justify-between items-center py-4">
+      <div>
+        <%= link_to "Friends", root_path , class:"text-white font-bold text-xl"%>
+      </div>
+      <div class="hidden md:block">
+        <ul class="flex space-x-4">
+         
+          <% if user_signed_in? %>
+           <li>
+              <%= link_to "User",admin_users_path,class:"text-white hover:text-gray-300" %>
+            </li>
+            
+            <li>
+              <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class:"text-white hover:text-gray-300" %>
+            </li>
+            <li>
+              <%= link_to "Edit Profile", edit_user_registration_path, class:"text-white hover:text-gray-300" %>
+            </li>
+          <% else %>
+            <li>
+              <%= link_to "Sign in", new_user_session_path, class:"text-white hover:text-gray-300" %>
+            </li>
+            <li>
+              <%= link_to "Sign Up", new_user_registration_path, class:"text-white hover:text-gray-300" %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="md:hidden">
+        <button class="text-white focus:outline-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

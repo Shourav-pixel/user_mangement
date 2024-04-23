@@ -1,0 +1,91 @@
+<% if user_signed_in? %>
+ 
+  <div class="card">
+    <div class="card-header">
+      User Management
+    </div>
+    <div class="card-body">
+      <%= form_with(url: bulk_actions_admin_users_path, id: :bulk_actions_form, method: :post, data: { controller: "form-reset" }) do |form| %>
+        <%= form.button type: :submit, value: :block, class: "btn btn-warning" do %>
+          Block
+        <% end %>
+        <%= form.button type: :submit, value: :unblock, class: "btn btn-primary"  do %>
+          Unblock
+        <% end %>
+        <%= form.button type: :submit, value: :delete, class: "btn btn-danger"  do %>
+          Delete
+        <% end %>
+        <br>
+        <br>
+        <table class="table table-light table-hover table-striped">
+          <thead class="table-dark">
+            <tr>
+              <th><input type="checkbox" id="select-all" onclick="toggleAllCheckboxes()"></th>
+              <%# <th>ID</th> %>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Last Login Time</th>
+              <th>Registration Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @users.each do |user| %>
+              <tr>
+                <td><%= check_box_tag "user_ids[]", user.id %></td>
+             
+                <td><%= user.username %></td>
+                <td><%= user.email %></td>
+                <td><%= user.last_sign_in_at %></td>
+                <td><%= user.created_at %></td>
+                <td><%= user.status %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  // Function to toggle all checkboxes
+  function toggleAllCheckboxes() {
+    var checkboxes = document.querySelectorAll('input[type="checkbox"][name="user_ids[]"]');
+    var selectAllCheckbox = document.getElementById('select-all');
+
+    checkboxes.forEach(function(checkbox) {
+      checkbox.checked = selectAllCheckbox.checked;
+    });
+  }
+
+  // Function to update the select-all checkbox state
+  function updateSelectAllCheckbox() {
+    var checkboxes = document.querySelectorAll('input[type="checkbox"][name="user_ids[]"]');
+    var selectAllCheckbox = document.getElementById('select-all');
+
+    var allChecked = true;
+    checkboxes.forEach(function(checkbox) {
+      if (!checkbox.checked) {
+        allChecked = false;
+        return;
+      }
+    });
+
+    selectAllCheckbox.checked = allChecked;
+  }
+
+  // Attach event listener to select-all checkbox
+  document.getElementById('select-all').addEventListener('change', function() {
+    toggleAllCheckboxes();
+  });
+
+  // Attach event listener to individual checkboxes to update select-all checkbox state
+  var checkboxes = document.querySelectorAll('input[type="checkbox"][name="user_ids[]"]');
+  checkboxes.forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+      updateSelectAllCheckbox();
+    });
+  });
+</script>
+

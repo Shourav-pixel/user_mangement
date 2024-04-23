@@ -1,0 +1,79 @@
+<div class="card">
+  <div class="card-header">
+    User Management
+  </div>
+  <div class="card-body">
+    <%= form_tag(admin_users_path, method: :post, id: "bulk-actions-form") do %>
+      <table class="table table-light table-hover table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th><input type="checkbox" id="select-all" onclick="toggleAllCheckboxes()"></th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Last Login Time</th>
+            <th>Registration Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users.each do |user| %>
+            <tr>
+              <td><input type="checkbox" name="user_ids[]" value="<%= user.id %>"></td>
+              <td><%= user.id %></td>
+              <td><%= user.username %></td>
+              <td><%= user.email %></td>
+              <td><%= user.last_sign_in_at %></td>
+              <td><%= user.created_at %></td>
+              <td><%= user.status %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+      <div class="button-group">
+        <button type="button" class="btn btn-danger" onclick="bulkAction('block')">Block</button>
+        <button type="button" class="btn btn-primary" onclick="bulkAction('unblock')">Unblock</button>
+        <button type="button" class="btn btn-warning" onclick="bulkAction('delete')">Delete</button>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<script>
+  // Function to handle bulk actions
+  function bulkAction(action) {
+    var form = document.getElementById("bulk-actions-form");
+    var actionUrl;
+
+    switch (action) {
+      case 'block':
+        actionUrl = "/admin/users/bulk_actions/block";
+        break;
+      case 'unblock':
+        actionUrl = "/admin/users/bulk_actions/unblock";
+        break;
+      case 'delete':
+        actionUrl = "/admin/users/bulk_actions/delete";
+        break;
+    }
+
+    form.action = actionUrl;
+    form.submit();
+  }
+
+  // Function to toggle all checkboxes based on the header checkbox
+  function toggleAllCheckboxes() {
+    var checkboxes = document.querySelectorAll("input[name='user_ids[]']");
+    var selectAllCheckbox = document.getElementById("select-all");
+
+    checkboxes.forEach(function(checkbox) {
+      checkbox.checked = selectAllCheckbox.checked;
+    });
+
+    // Set indeterminate state if only some checkboxes are checked
+    selectAllCheckbox.indeterminate = checkboxes.length > 0 && !Array.from(checkboxes).every(checkbox => checkbox.checked) && !Array.from(checkboxes).every(checkbox => !checkbox.checked);
+  }
+</script>
